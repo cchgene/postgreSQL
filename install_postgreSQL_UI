@@ -1,0 +1,65 @@
+
+1.get rpm
+yum install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+
+2.start install PostgreSQL
+yum install postgresql96-server postgresql96-contrib
+
+3.init db
+/usr/pgsql-9.6/bin/postgresql96-setup initdb
+
+4.start postgresql service
+systemctl start postgresql-9.6.service
+systemctl enable postgresql-9.6.service
+
+
+5.chech version
+psql --version
+
+5.1 if psql not in environment
+vi /etc/profile
+#add
+export PATH=/usr/pgsql-9.6/bin:$PATH
+#save and exit
+source etc/profile
+
+
+6.set up account and password
+su -postgres
+psql -U postgres
+ALTER USER postgres WITH PASSWORD 'PASSWORD'
+\q
+exit
+
+7.set up listen_addresses
+vi /var/lib/pgsql/9.6/data/postgresql.conf
+#find #CONNECTIONS AND AUTHENTICATION and add
+listen _addresses = '*' #表示任何IP皆可開放連結,或者可以指定IP來讓使用者連結
+#save and exit
+
+8.restart postgresql service
+systemctl restart postgresql-9.6.service
+
+9.set up client ip 
+vi /var/lib/pgsql/9.6/data/pg_hba.conf
+#find IPv4 localconnections:
+host    all             all             127.0.0.1/32            ident
+host    all             all             0.0.0.0/0               trust
+#0.0.0.0/0代表全部允許接入
+#save and exit
+
+10.close server firewall 
+firewall-cmd --add-service=postgresql --permanent
+firewall-cmd --reload
+
+11.install pgadmin4
+cd /tmp
+wget https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v3.2/source/pgadmin4-3.2.tar.gz
+tar -zxvf pgadmin4-3.2.tar.gz
+mv pgadmin4-3.2 /usr
+
+12.start pgadmin4
+python /usr/pgadmin4-3.2/web/pgAdmin4.py
+#url will be shown
+#start google and enter url
+
