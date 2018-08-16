@@ -25,7 +25,7 @@ source etc/profile
 
 
 6.set up account and password
-su -postgres
+su - postgres
 psql -U postgres
 ALTER USER postgres WITH PASSWORD 'PASSWORD'
 \q
@@ -63,3 +63,12 @@ python /usr/pgadmin4-3.2/web/pgAdmin4.py
 #url will be shown
 #start google and enter url
 
+13.create-server
+#General
+NAME:'Name'
+
+#Connect
+Host name/address:'yourip'
+Username:'postgres'
+password:'PASSWORD'   #same with 6.set up account and password
+#enter save
